@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let aliensRemoved = []
 	let blockResult = document.querySelector('.result')
 	let points = 0
+	let gameOver = false
 
 	const alienInvaders = [
 		0,1,2,3,4,5,6,7,8,9,
@@ -55,14 +56,28 @@ document.addEventListener('DOMContentLoaded', () => {
 		moveDown = false
 
 		for (let i=0; i<alienInvaders.length; i++){
-			squares[alienInvaders[i]].classList.remove('invader')
+			if (!aliensRemoved.includes(i)){
+				squares[alienInvaders[i]].classList.remove('invader')
+			}
 		}
+
 		for (let i=0; i<alienInvaders.length; i++){
 			alienInvaders[i] += direction
 		}
+
 		for (let i=0; i<alienInvaders.length; i++){
-			if (!aliensRemoved.includes(i)){
-				squares[alienInvaders[i]].classList.add('invader')
+			if (!aliensRemoved.includes(i) & alienInvaders[i] > squares.length){
+				blockResult.innerHTML = 'GAME OVER'
+				gameOver = true
+				clearInterval(invadersId)
+			}
+		}
+
+		if (!gameOver){
+			for (let i=0; i<alienInvaders.length; i++){
+				if (!aliensRemoved.includes(i)){
+					squares[alienInvaders[i]].classList.add('invader')
+				}
 			}
 		}
 
@@ -74,12 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		if (alienInvaders.length ===  aliensRemoved.length){
 			blockResult.innerHTML = 'YOU WIN'
-			clearInterval(shootId)
+			clearInterval(invadersId)
 		}
 
-		if (alienInvaders.contains())
+		if (alienInvaders.includes(positionShooter) & !aliensRemoved.includes(alienInvaders.indexOf(positionShooter))){
+			blockResult.innerHTML = 'SHIP DESTROY'
+			clearInterval(invadersId)
+		}
+
+
 	}
-	invadersId = setInterval(moveInvaders, 600)
+	invadersId = setInterval(moveInvaders, 100)
 
 	function shoot(e){
 		let laserLastPosition = -1
